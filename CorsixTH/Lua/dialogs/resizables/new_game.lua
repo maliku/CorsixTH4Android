@@ -34,14 +34,14 @@ local col_button = {
 }
 
 function UINewGame:UINewGame(ui)
-  self:UIResizable(ui, 200, 280, col_bg)
+  self:UIResizable(ui, 250, 280, col_bg)
   
   local app = ui.app
   self.esc_closes = true
   self.resizable = false
   self.modal_class = "main menu"
   self.on_top = true
-  self:setDefaultPosition(0.5, 0.25)
+  self:setDefaultPosition(0.5, 0.1)
   if not pcall(function()
     local palette = app.gfx:loadPalette("QData", "DrugN01V.pal")
     self.panel_sprites = app.gfx:loadSpriteTable("QData", "DrugN02V", true, palette)
@@ -58,12 +58,12 @@ function UINewGame:UINewGame(ui)
 
   -- individual buttons
   self.default_button_sound = "selectx.wav"
-  self:addBevelPanel(20, 25, 110, 20, col_bg):setLabel(_S.new_game_window.tutorial).lowered = true
-  self:addPanel(12, 150, 20):makeToggleButton(0, 0, 29, 29, 11, self.buttonTutorial):setTooltip(_S.tooltip.new_game_window.tutorial)
-  self:addBevelPanel(20, 65, 160, 40, col_bg):setLabel(_S.new_game_window.easy):makeButton(0, 0, 160, 40, nil, self.buttonEasy):setTooltip(_S.tooltip.new_game_window.easy)
-  self:addBevelPanel(20, 115, 160, 40, col_bg):setLabel(_S.new_game_window.medium):makeButton(0, 0, 160, 40, nil, self.buttonMedium):setTooltip(_S.tooltip.new_game_window.medium)
-  self:addBevelPanel(20, 165, 160, 40, col_bg):setLabel(_S.new_game_window.hard):makeButton(0, 0, 160, 40, nil, self.buttonHard):setTooltip(_S.tooltip.new_game_window.hard)
-  self:addBevelPanel(20, 220, 160, 40, col_bg):setLabel(_S.new_game_window.cancel):makeButton(0, 0, 160, 40, nil, self.buttonCancel):setTooltip(_S.tooltip.new_game_window.cancel)
+  self:addBevelPanel(20, 25, 160, 20, col_bg):setLabel(_S.new_game_window.tutorial).lowered = true
+  self:addPanel(12, 200, 20):makeToggleButton(0, 0, 29, 29, 11, self.buttonTutorial):setTooltip(_S.tooltip.new_game_window.tutorial)
+  self:addBevelPanel(20, 65, 210, 40, col_bg):setLabel(_S.new_game_window.easy):makeButton(0, 0, 210, 40, nil, self.buttonEasy):setTooltip(_S.tooltip.new_game_window.easy)
+  self:addBevelPanel(20, 115, 210, 40, col_bg):setLabel(_S.new_game_window.medium):makeButton(0, 0, 210, 40, nil, self.buttonMedium):setTooltip(_S.tooltip.new_game_window.medium)
+  self:addBevelPanel(20, 165, 210, 40, col_bg):setLabel(_S.new_game_window.hard):makeButton(0, 0, 210, 40, nil, self.buttonHard):setTooltip(_S.tooltip.new_game_window.hard)
+  self:addBevelPanel(20, 220, 210, 40, col_bg):setLabel(_S.new_game_window.cancel):makeButton(0, 0, 210, 40, nil, self.buttonCancel):setTooltip(_S.tooltip.new_game_window.cancel)
 end
 
 function UINewGame:getSavedWindowPositionName()
