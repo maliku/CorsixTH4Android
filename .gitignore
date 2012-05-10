@@ -20,3 +20,4 @@ Debug/
 Release/
 MinSizeRel/
 RelWithDebInfo/
+*.swp
