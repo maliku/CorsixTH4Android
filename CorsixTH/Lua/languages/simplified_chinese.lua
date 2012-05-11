@@ -39,12 +39,12 @@ debug_patient_window = {
   caption = "Debug Patient",
 }
 totd_window = {
-  previous = "上一个提示",
+  previous = "上一条提示",
   tips = {
-    [1] = "Corsix-TH，主题医院复刻版，项目主页：http://code.google.com/p/corsix-th",
+    [1] = "主题医院复刻版，基于 Corsix-TH 项目",
     [2] = "运行游戏需要原版主题医院，下载地址：http://www.gougou.com/search?search=主题医院",
     [3] = "找到bug可以提交到这里：http://code.google.com/p/corsix-th/issues/list",
-    [4] = "这个复刻版还有很多功能没有实现，例如地震、传染病等，这里有说明：http://code.google.com/p/corsix-th/wiki/ProgrammingIdeas",
+    [4] = "这个复刻版还有很多功能没有实现，例如地震、传染病等等",
     [5] = "有问题可加入QQ群“【主题医院】交流平台”(群号：13365299)详细询问，或者到百度贴吧“主题医院”吧详细询问",
     [6] = "项目论坛地址1：http://forums.corsix-th.com",
     [7] = "项目论坛地址2：http://groups.google.com/group/corsix-th-dev",
@@ -61,12 +61,12 @@ totd_window = {
     [18] = "如果你对这个项目有兴趣，最新版源码在这里：http://th.corsix.org/corsix-th-latest.tar.gz",
     [19] = "编译源码的方法：http://code.google.com/p/corsix-th/wiki/HowToCompile",
   },
-  next = "下一个提示",
+  next = "下一条提示",
 }
 tooltip = {
   totd_window = {
-    previous = "显示上一个提示",
-    next = "显示下一个提示",
+    previous = "显示上一条提示",
+    next = "显示下一条提示",
   },
   message = {
     button = "Left click to open message",
