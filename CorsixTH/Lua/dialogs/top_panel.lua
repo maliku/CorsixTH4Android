@@ -44,7 +44,7 @@ function UITopPanel:UITopPanel(ui)
   self.default_button_sound = "selectx.wav"
   self.countdown = 0
   
-  local function playMusic(item)
+  local function playMusic()
       if not app.audio.background_music then
           app.audio:playRandomBackgroundTrack() -- play
       else
@@ -52,9 +52,10 @@ function UITopPanel:UITopPanel(ui)
       end
   end
 
-  local function playAudio(item)
-      app.audio:playSoundEffects(item.checked)
-      app.config.play_announcements = item.checked
+  local function playAudio()
+      local toggle = not app.config.play_sounds
+      app.audio:playSoundEffects(toggle)
+      app.config.play_announcements = toggle
   end
 
   local speed_names = {
