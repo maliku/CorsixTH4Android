@@ -29,13 +29,10 @@ function UITopPanel:UITopPanel(ui)
   self.ui = ui
   self.world = app.world
   self.on_top = true
-  self.width = 320
+  self.width = 417
   self.height = 48
   self:setDefaultPosition(0.5, 0)
-  self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
-  self.money_font = app.gfx:loadFont("QData", "Font05V")
-  self.date_font = app.gfx:loadFont("QData", "Font16V")
-  self.white_font = app.gfx:loadFont("QData", "Font01V", 0, -2)
+  self.panel_sprites = app.gfx:loadSpriteTable("Bitmap", "top_panel", true)
   
   -- State relating to fax notification messages
   self.show_animation = true
@@ -47,26 +44,105 @@ function UITopPanel:UITopPanel(ui)
   self.default_button_sound = "selectx.wav"
   self.countdown = 0
   
-  --self:addPanel( 1,   0, 0):makeButton(6, 6, 35, 36, 2, self.dialogBankManager, nil, self.dialogBankStats):setTooltip(_S.tooltip.toolbar.bank_button)
-  --self:addPanel( 3,  40, 0) -- Background for balance, rep and date
-  self:addPanel( 1, 11, 0):makeButton(6, 6, 35, 36, 2, function() app:quit() end):setTooltip(_S.menu_file.quit)
-  self:addPanel( 1, 48, 0):makeButton(1, 6, 35, 36, 2, self.dialogFurnishCorridor):setTooltip(_S.tooltip.toolbar.objects)
-  self:addPanel( 1, 85, 0):makeButton(1, 6, 35, 36, 2, self.editRoom):setSound():setTooltip(_S.tooltip.toolbar.edit) -- Remove default sound for this button
-  self:addPanel(1, 122, 0):makeButton(1, 6, 35, 36, 2, self.dialogHireStaff):setTooltip(_S.tooltip.toolbar.hire)
-  -- The dynamic info bar
-  --[[self:addPanel(12, 364, 0)
-  for x = 377, 630, 10 do
-    self:addPanel(13, x, 0)
+  local function playMusic(item)
+      if not app.audio.background_music then
+          app.audio:playRandomBackgroundTrack() -- play
+      else
+          app.audio:pauseBackgroundTrack() -- pause or unpause
+      end
   end
-  self:addPanel(14, 627, 0)
-  
-  ui:addKeyHandler("R", self, self.dialogResearch)      -- R for research
-  ui:addKeyHandler("A", self, self.toggleAdviser)      -- A for adviser
-  ui:addKeyHandler("M", self, self.openFirstMessage)    -- M for message
-  ui:addKeyHandler("T", self, self.dialogTownMap)       -- T for town map
-  ui:addKeyHandler("I", self, self.toggleInformation)  -- I for Information when you first build
-  ui:addKeyHandler("C", self, self.dialogDrugCasebook)  -- C for casebook
-  ]]
+
+  local function playAudio(item)
+      app.audio:playSoundEffects(item.checked)
+      app.config.play_announcements = item.checked
+  end
+
+  local speed_names = {
+      "Pause",
+      "Slowest",
+      "Slower",
+      "Normal",
+      "Max speed",
+      "And then some more",
+  }
+
+  local function speedUp()
+      local current_speed = app.world:getCurrentSpeed()
+      if current_speed == "And then some more" then
+          return
+      end
+      for i = 1, #speed_names do
+          if current_speed == speed_names[i] then
+              app.world:setSpeed(speed_names[i + 1])
+          end
+      end
+  end
+
+  local function slowDown()
+      local current_speed = app.world:getCurrentSpeed()
+      if current_speed == "Pause" then
+          return
+      end
+      for i = 1, #speed_names do
+          if current_speed == speed_names[i] then
+              app.world:setSpeed(speed_names[i - 1])
+          end
+      end
+  end
+
+  local function volumeUp()
+      local volume = 0
+      if app.config.music_volume < 1.0 then
+          volume = app.config.music_volume + 0.1
+          if volume > 1.0 then volume = 1.0 end
+          app.audio:setBackgroundVolume(volume)
+      end
+      if app.config.sound_volume < 1.0 then
+          volume = app.config.sound_volume + 0.1
+          if volume > 1.0 then volume = 1.0 end
+          app.audio:setSoundVolume(volume)
+      end
+      if app.config.announcement_volume < 1.0 then
+          volume = app.config.announcement_volume + 0.1
+          if volume > 1.0 then volume = 1.0 end
+          app.audio:setAnnouncementVolume(volume)
+      end
+  end
+
+  local function volumeDown()
+      local volume = 0
+      if app.config.music_volume > 0 then
+          volume = app.config.music_volume - 0.1
+          if volume < 0 then volume = 0 end
+          app.audio:setBackgroundVolume(volume)
+      end
+      if app.config.sound_volume > 0 then
+          volume = app.config.sound_volume - 0.1
+          if volume < 0 then volume = 0 end
+          app.audio:setSoundVolume(volume)
+      end
+      if app.config.announcement_volume > 0 then
+          volume = app.config.announcement_volume - 0.1
+          if volume < 0 then volume = 0 end
+          app.audio:setAnnouncementVolume(volume)
+      end
+  end
+
+  self:addPanel( 1, 0, 0):makeButton(1, 6, 35, 36, 2, function() self.ui:addWindow(UISaveGame(self.ui)) end):setTooltip(_S.menu_file.save)
+  self:addPanel( 3, 42, 0):makeButton(1, 6, 35, 36, 4, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end):setTooltip(_S.menu_file.load)
+
+  self:addPanel( 5, 79, 0):makeButton(1, 6, 35, 36, 6, playMusic):setTooltip(_S.menu_options.music)
+  self:addPanel( 7, 116, 0):makeButton(1, 6, 35, 36, 8, playAudio):setTooltip(_S.menu_options.sound)
+
+  self:addPanel( 9, 153, 0):makeButton(1, 6, 35, 36, 10, volumeDown):setTooltip(_S.menu_options.sound_vol)
+  self:addPanel(11, 190, 0):makeButton(1, 6, 35, 36, 12, volumeUp):setTooltip(_S.menu_options.sound_vol)
+
+  self:addPanel(13, 227, 0):makeButton(1, 6, 35, 36, 14, slowDown):setTooltip(_S.menu_options_game_speed.slower)
+  self:addPanel(15, 264, 0):makeButton(1, 6, 35, 36, 16, speedUp):setSound():setTooltip(_S.menu_options_game_speed.max_speed)
+
+  self:addPanel(17, 301, 0):makeButton(1, 6, 35, 36, 18, function() self.ui:showBriefing() end):setTooltip(_S.menu_charts.briefing)
+  self:addPanel(19, 338, 0):makeButton(1, 6, 35, 36, 20, function() app:restart() end):setTooltip(_S.menu_file.restart)
+  self:addPanel(21, 375, 0):makeButton(1, 6, 35, 36, 22, function() app:quit() end):setTooltip(_S.menu_file.quit)
 end
 
 function UITopPanel:draw(canvas, x, y)
@@ -74,35 +150,6 @@ function UITopPanel:draw(canvas, x, y)
     return
   end
   Window.draw(self, canvas, x, y)
-
-  --[[x, y = x + self.x, y + self.y
-  self.money_font:draw(canvas, ("%7i"):format(self.ui.hospital.balance), x + 44, y + 9)
-  local month, day = self.world:getDate()
-  self.date_font:draw(canvas, _S.date_format.daymonth:format(day, month), x + 140, y + 20, 60, 0)
-  
-  -- Draw possible information in the dynamic info bar
-  if not self.additional_buttons[1].visible then
-    self:drawDynamicInfo(canvas, x + 364, y)
-  end
-  
-  if self.show_animation then
-    if self.factory_counter >= 1 then
-        self.panel_sprites:draw(canvas, 40, x + 177, y + 1)
-    end
-  
-    if self.factory_counter > 1 and self.factory_counter <= 22 then
-      for dx = 0, self.factory_counter do
-        self.panel_sprites:draw(canvas, 41, x + 179 + dx, y + 1)
-      end
-    end
-  
-    if self.factory_counter == 22 then
-      self.panel_sprites:draw(canvas, 42, x + 201, y + 1)
-    end
-  end
-  ]]
-  
-  --self:drawReputationMeter(canvas, x + 55, y + 35)
 end
 
 function UITopPanel:setPosition(x, y)

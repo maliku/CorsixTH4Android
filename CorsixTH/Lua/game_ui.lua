@@ -40,7 +40,7 @@ function GameUI:GameUI(app, local_hospital)
   else
     self.adviser = UIAdviser(self)
     self.bottom_panel = UIBottomPanel(self)
-    self.menu_bar = UIMenuBar(self)
+    self.menu_bar = UITopPanel(self)
     self.bottom_panel:addWindow(self.adviser)
     self:addWindow(self.bottom_panel)
     self:addWindow(self.menu_bar)
@@ -209,7 +209,7 @@ function GameUI:onKeyDown(code, rawchar)
     self:setEditRoom(false)
     return true
   end
-  self.menu_bar:onKeyDown(key, rawchar, code)
+  -- self.menu_bar:onKeyDown(key, rawchar, code)
   if scroll_keys[key] then
     self:updateKeyScroll()
     return
