@@ -115,7 +115,7 @@ local function MakePermanentObjectsTable(inverted)
   local menu_bar = TheApp.ui and TheApp.ui.menu_bar
   if not menu_bar then
     -- The menu bar wants a UI, but it is happy with just something naming an App
-    menu_bar = UIMenuBar({app = TheApp})
+    menu_bar = UITopPanel(TheApp.ui)
   end
   permanent[menu_bar] = "TheApp.ui.menu_bar"
   
