@@ -26,7 +26,7 @@ function UIFax:UIFax(ui, icon)
   self.background = gfx:loadRaw("Fax01V", 640, 480)
   local palette = gfx:loadPalette("QData", "Fax01V.pal")
   palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
-  palette:setEntry(146, 0x32, 0x32, 0x32) -- Make index 255 transparent
+  palette:setEntry(146, 0x48, 0x48, 0x48) -- Make index 255 transparent
   self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
   self.fax_font = gfx:loadFont("QData", "Font51V", false, palette)
   self.icon = icon
