@@ -939,14 +939,15 @@ end
 --! which save game version it is. This was added after the Beta 8
 --! release, which is why the checks prior to that version aren't made.
 function App:getVersion()
-  local ver = self.savegame_version
+  --[[ local ver = self.savegame_version
   if ver > 51 then
     return "Trunk"
   elseif ver > 45 then
     return "0.01"
   else
     return "Beta 8 or earlier"
-  end
+  end]]
+  return "0.7"
 end
 
 function App:save(filename)
