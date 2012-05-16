@@ -52,7 +52,7 @@ JNIEnv* jEnv;
 
 static int showkeyboard(lua_State *L) {
 	LOGI("Showing keyboard");
-	jclass cls = jEnv->FindClass("uk/co/armedpineapple/corsixth/SDLActivity");
+	jclass cls = jEnv->FindClass("com/dreamdance/android/th/SDLActivity");
 	jmethodID method = jEnv->GetStaticMethodID(cls, "showSoftKeyboard", "()V");
 	jEnv->CallStaticVoidMethod(cls, method);
 	return 0;

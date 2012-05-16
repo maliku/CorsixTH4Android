@@ -250,7 +250,7 @@ int CorsixTH_lua_panic(lua_State *L)
     return 0;
 }
 
-extern "C" void Java_uk_co_armedpineapple_corsixth_SDLActivity_setGamePath(
+extern "C" void Java_com_dreamdance_android_th_SDLActivity_setGamePath(
 		JNIEnv* env, jobject obj, jstring javaString) {
 
 	const char *nativeString = env->GetStringUTFChars(javaString, 0);
