@@ -947,7 +947,7 @@ function App:getVersion()
   else
     return "Beta 8 or earlier"
   end]]
-  return "0.65"
+  return "0.70"
 end
 
 function App:save(filename)

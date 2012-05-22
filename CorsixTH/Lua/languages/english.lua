@@ -338,7 +338,7 @@ totd_window = {
     "Did you try to enter the European emergency number (112) into the fax machine? Make sure your sound is on!",
     "You can adjust some settings such as the resolution and language in the options window found both in the main menu and ingame.",
     "You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
-    "Based on CorsixTH project. Optimized for handheld devices,such as long press can pick up objects, and then tap second finger can be rotated it.",
+    "Based on CorsixTH project(Great thanks). Optimized for handheld devices,such as long press can pick up objects, and then tap second finger can be rotated it.",
     "If you find a bug, please report it at our bugtracker: http://code.google.com/p/theme-hospital/issues/list",
     "Each level has certain requirements to fulfill before you can move on to the next one. Check the status window to see your progression towards the level goals.",
     "If you want to edit or remove an existing room, you can do so with the edit room button found in the bottom toolbar.",
