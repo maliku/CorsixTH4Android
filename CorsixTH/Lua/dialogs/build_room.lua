@@ -54,7 +54,7 @@ function UIBuildRoom:UIBuildRoom(ui)
     end
   end
   
-  self:addPanel(210,   0,   0):makeButton(9, 9, 129, 32, 211, cat(1)):setTooltip(_S.tooltip.build_room_window.room_classes.diagnosis)
+  self:addPanel(210,   0,   0):setScaled():makeButton(9, 9, 129, 32, 211, cat(1)):setTooltip(_S.tooltip.build_room_window.room_classes.diagnosis)
   self:addPanel(212,   0,  41):makeButton(9, 0, 129, 31, 213, cat(2)):setTooltip(_S.tooltip.build_room_window.room_classes.treatment)
   -- Clinics should really be at y=73, but TH skips a pixel here
   -- so that the left and right columns are the same height

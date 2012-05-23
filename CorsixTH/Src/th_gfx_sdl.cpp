@@ -36,6 +36,7 @@ SOFTWARE.
 #include "agg_renderer_scanline.h"
 #include "agg_span_allocator.h"
 #include <new>
+#include <android/log.h>
 
 THRenderTarget::THRenderTarget()
 {
@@ -637,6 +638,12 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
     SDL_Rect rctDest;
     rctDest.x = iX;
     rctDest.y = iY;
+
+    if ((iFlags & THDF_Scale) == THDF_Scale) {
+        rctDest.w = pSprite->w << 1;
+        rctDest.h = pSprite->h << 1;
+        __android_log_print(ANDROID_LOG_INFO, "SDL", "Scale Sprite\n");
+    }
     SDL_BlitSurface(pSprite, NULL, pCanvas->getRawSurface(), &rctDest);
 }
 

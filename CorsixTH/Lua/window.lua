@@ -143,6 +143,7 @@ function Panel:Panel()
   self.colour = nil
   self.custom_draw = nil
   self.visible = nil
+  self.scale = nil
 end
 
 local panel_mt = permanent("Window.<panel_mt>", getmetatable(Panel()))
@@ -165,6 +166,11 @@ end
 
 function Panel:makeTextbox(...)
   return self.window:makeTextboxOnPanel(self, ...)
+end
+
+function Panel:setScaled()
+    self.scale = true;
+  return self
 end
 
 --[[ Set the colour of a panel
@@ -1103,6 +1109,8 @@ function Window:draw(canvas, x, y)
       if panel.visible then
         if panel.custom_draw then
           panel:custom_draw(canvas, x, y)
+      elseif panel.scale then
+          panel_sprites_draw(panel_sprites, canvas, panel.sprite_index, x + panel.x, y + panel.y, 1073741824)
         else
           panel_sprites_draw(panel_sprites, canvas, panel.sprite_index, x + panel.x, y + panel.y)
         end

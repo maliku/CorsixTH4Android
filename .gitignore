@@ -21,3 +21,6 @@ Release/
 MinSizeRel/
 RelWithDebInfo/
 *.swp
+
+# This is for vim template file
+*~

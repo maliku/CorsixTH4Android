@@ -73,6 +73,8 @@ enum THDrawFlags
     THDF_BoundBoxHitTest= 1 << 12,
     //! Apply a cropping operation prior to drawing
     THDF_Crop           = 1 << 13,
+    //! Scale sprite
+    THDF_Scale          = 1 << 30,
 };
 
 //! Bitflags for animation frames
