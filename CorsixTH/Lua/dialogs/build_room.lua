@@ -22,16 +22,20 @@ local TH = require "TH"
 
 class "UIBuildRoom" (Window)
 
-local scale_factor = 1.5
+local factor = 1.5
+local cat_label_y = {}
+
 function UIBuildRoom:UIBuildRoom(ui)
   self:Window()
   
   local app = ui.app
+  factor = app:getGlobalScaleFactor()
+  cat_label_y = {21 * factor, 53 * factor, 84 * factor, 116 * factor}
   self.ui = ui
   self.modal_class = "main"
   self.esc_closes = true
-  self.width = 297 * scale_factor
-  self.height = 294 * scale_factor
+  self.width = 297 * factor
+  self.height = 294 * factor
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req09V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
@@ -78,10 +82,10 @@ function UIBuildRoom:UIBuildRoom(ui)
   .panel_for_sprite.custom_draw = --[[persistable:build_room_draw_close_button]] function(panel, canvas, x, y)
     x = x + panel.x
     y = y + panel.y
-    panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, 64)
+    panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, panel:getScaledFlag())
     local btn = panel.window.active_button
     if btn and btn.panel_for_sprite == panel and btn.active then
-      build_room_dialog_close:draw(canvas, 1, x + 8 * scale_factor, y + 34 * scale_factor, 64)
+      build_room_dialog_close:draw(canvas, 1, x + 8 * factor, y + 34 * factor, panel:getScaledFlag())
     end
   end
   
@@ -112,27 +116,25 @@ function UIBuildRoom:UIBuildRoom(ui)
   self:makeTooltip(_S.tooltip.build_room_window.cost, 160, 228, 282, 242)
 end
 
-local cat_label_y = {21 * scale_factor, 53 * scale_factor, 84 * scale_factor, 116 * scale_factor}
-
 function UIBuildRoom:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   
   x, y = self.x + x, self.y + y
-  self.white_font:draw(canvas, self.list_title, x + 163 * scale_factor, y + 18 * scale_factor)
+  self.white_font:draw(canvas, self.list_title, x + 163 * factor, y + 18 * factor)
   for i = 1, 4 do
     (i == self.category_index and self.blue_font or self.white_font)
-      :draw(canvas, self.category_titles[i], x + 19 * scale_factor, y + cat_label_y[i])
+      :draw(canvas, self.category_titles[i], x + 19 * factor, y + cat_label_y[i])
   end
   
   for i, room in ipairs(self.list) do
     (i == self.list_hover_index and self.blue_font or self.white_font)
-      :draw(canvas, room.name, x + 163 * scale_factor, y + 21 * scale_factor + i * 19 * scale_factor)
+      :draw(canvas, room.name, x + 163 * factor, y + (21 + i * 19) * factor)
   end
   
-  self.white_font:draw(canvas, self.cost_box, x + 163 * scale_factor, y + 232 * scale_factor)
+  self.white_font:draw(canvas, self.cost_box, x + 163 * factor, y + 232 * factor)
   
   if self.preview_anim then
-    self.preview_anim:draw(canvas, x + 70 * scale_factor, y + 200 * scale_factor)
+    self.preview_anim:draw(canvas, x + 70 * factor, y + 200 * factor)
   end
 end
 

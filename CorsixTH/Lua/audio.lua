@@ -278,7 +278,7 @@ end
 
 function Audio:playRandomBackgroundTrack()
   if self.not_loaded or #self.background_playlist == 0 then
-    return
+    return false
   end
   local enabled = {}
   for i, info in ipairs(self.background_playlist) do
@@ -287,10 +287,11 @@ function Audio:playRandomBackgroundTrack()
     end
   end
   if not enabled[1] then
-    return
+    return false
   end
   local index = enabled[math.random(1, #enabled)]
   self:playBackgroundTrack(index)
+  return true
 end
 
 function Audio:findIndexOfCurrentTrack()
@@ -468,3 +469,4 @@ function Audio:notifyJukebox()
     jukebox:updatePlayButton()
   end
 end
+

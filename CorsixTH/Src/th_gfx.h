@@ -62,7 +62,8 @@ enum THDrawFlags
     //! Draw using a remapped palette
     THDF_AltPalette     = 1 <<  4,
 	//! Scale sprite
-    THDF_Scaled         = 1 <<  6,
+    THDF_Scale1_5X      = 1 <<  6,
+    THDF_Scale2_0X      = 1 <<  7,
 
     /** Object attached to tile flags **/
     /* (should be set prior to attaching to a tile) */

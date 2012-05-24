@@ -30,6 +30,7 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:Window()
   
   local app = ui.app
+  factor = app:getGlobalScaleFactor()
   if edit_dialog then
     self.modal_class = "furnish"
     self.edit_dialog = edit_dialog

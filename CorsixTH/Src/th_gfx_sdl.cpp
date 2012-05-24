@@ -631,7 +631,7 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
     if(iSprite >= m_iSpriteCount)
         return;
 
-    SDL_Surface *pSprite = _getSpriteBitmap(iSprite, iFlags & 0x7F);
+    SDL_Surface *pSprite = _getSpriteBitmap(iSprite, iFlags & 0xFF);
     if(pSprite == NULL)
         return;
 
@@ -685,9 +685,10 @@ SDL_Surface* THSpriteSheet::_getSpriteBitmap(unsigned int iSprite, unsigned long
 
     THDrawFlags eTask;
     SDL_Surface* pBaseBitmap;
-    if (iFlags & THDF_Scaled) {
+    if(iFlags & (THDF_Scale1_5X | THDF_Scale2_0X))
+    {
         pBaseBitmap = _getSpriteBitmap(iSprite, iFlags & 0x1F);
-        eTask = THDF_Scaled;
+        eTask = (iFlags & THDF_Scale1_5X) ? THDF_Scale1_5X : THDF_Scale2_0X;
     }
     else if(iFlags & THDF_AltPalette)
     {
@@ -712,8 +713,9 @@ SDL_Surface* THSpriteSheet::_getSpriteBitmap(unsigned int iSprite, unsigned long
     if(pBaseBitmap == NULL)
         return NULL;
 
-    if (THDF_Scaled == eTask) {
-        pBitmap = zoomSurface(pBaseBitmap, 1.5f, 1.5f, 0);
+    if (THDF_Scale1_5X == eTask || THDF_Scale2_0X == eTask) {
+        float factor = (THDF_Scale1_5X == eTask) ? 1.5f : 2.0f;
+        pBitmap = zoomSurface(pBaseBitmap, factor, factor, 0);
         m_pSprites[iSprite].pBitmap[iFlags] = pBitmap;
         return pBitmap;
     } else {

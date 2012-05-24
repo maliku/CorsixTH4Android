@@ -1023,3 +1023,7 @@ function App:afterLoad()
   self.world:afterLoad(old, new)
   self.ui:afterLoad(old, new)
 end
+
+function App:getGlobalScaleFactor()
+    return (self.config.height >= 640 and 2) or 1.5
+end

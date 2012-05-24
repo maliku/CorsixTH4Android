@@ -47,6 +47,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   object_list = object_list or {} -- Default argument
   
   local app = ui.app
+  factor = app:getGlobalScaleFactor()
   self.modal_class = "main"
   self.ui = ui
   self.map = app.map

@@ -26,6 +26,7 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:Window()
   
   local app = ui.app
+  factor = app:getGlobalScaleFactor()
   self.modal_class = "information"
   self.esc_closes = true
   self.on_top = true
@@ -78,5 +79,5 @@ function UIConfirmDialog:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   
   x, y = x + self.x, y + self.y
-  self.white_font:drawWrapped(canvas, self.text, x + 17 * factor, y + 17 * factor, 153)
+  self.white_font:drawWrapped(canvas, self.text, x + 17 * factor, y + 17 * factor, 153 * factor)
 end

@@ -46,7 +46,9 @@ function UITopPanel:UITopPanel(ui)
   
   local function playMusic()
       if not app.audio.background_music then
-          app.audio:playRandomBackgroundTrack() -- play
+          if not app.audio:playRandomBackgroundTrack() then -- play
+              self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.need_music_data))
+          end
       else
           app.audio:pauseBackgroundTrack() -- pause or unpause
       end

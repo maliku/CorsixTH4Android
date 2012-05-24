@@ -24,6 +24,8 @@ SOFTWARE.
 #include "lua_sdl.h"
 #include "th_lua.h"
 #include <string.h>
+#include "SDL_framerate.h"
+
 #ifndef _MSC_VER
 #define stricmp strcasecmp
 #else
@@ -138,6 +140,7 @@ static void l_push_utf8(lua_State *L, uint32_t iCodePoint)
     lua_pushlstring(L, reinterpret_cast<char*>(aBytes), iNBytes);
 }
 
+#define MAX_FPS 24
 static int l_mainloop(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTHREAD);
@@ -146,7 +149,10 @@ static int l_mainloop(lua_State *L)
     fps_ctrl *fps_control = (fps_ctrl*)lua_touserdata(L, lua_upvalueindex(1));
     SDL_TimerID timer = SDL_AddTimer(30, timer_frame_callback, NULL);
     SDL_Event e;
-    
+    FPSmanager fpsm;
+	SDL_initFramerate(&fpsm);
+    SDL_setFramerate(&fpsm, MAX_FPS);
+
     while(SDL_WaitEvent(&e) != 0)
     {
         bool do_frame = false;
@@ -254,6 +260,7 @@ static int l_mainloop(lua_State *L)
                 lua_settop(dispatcher, 0);
             } while(fps_control->limit_fps == false && SDL_PollEvent(NULL) == 0);
         }
+		SDL_framerateDelay(&fpsm);  
 
         // No events pending - a good time to do a bit of garbage collection
         lua_gc(L, LUA_GCSTEP, 2);
