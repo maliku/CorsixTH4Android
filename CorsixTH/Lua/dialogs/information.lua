@@ -99,8 +99,6 @@ function UIInformation:draw(canvas, x, y)
     last_y = self.black_font:drawWrapped(canvas, text:gsub("//", ""), dx + self.spacing.l, last_y, self.text_width)
     last_y = self.black_font:drawWrapped(canvas, " ",                 dx + self.spacing.l, last_y, self.text_width)
   end
-  -- DK: temp code
-  self.black_font:drawWrapped(canvas, "Back key can close window", dx + self.spacing.l, last_y + 15, self.text_width)
 
   Window.draw(self, canvas, x, y)
 end

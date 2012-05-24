@@ -26,11 +26,13 @@ local math_floor
 class "UIFurnishCorridor" (Window)
 
 local factor = 1.5
+local hover_edges = {}
 function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:Window()
   
   local app = ui.app
   factor = app:getGlobalScaleFactor()
+  hover_edges = {158 * factor, 346 * factor, 34 * factor, 224 * factor}
   if edit_dialog then
     self.modal_class = "furnish"
     self.edit_dialog = edit_dialog
@@ -210,8 +212,8 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
   local repaint = Window.onMouseMove(self, x, y, dx, dy)
   
   local hover_idx = 0
-  if 158 <= x and x < 346 and 34 <= y and y < 224 then
-    hover_idx = math_floor((y - 15) / 19)
+  if hover_edges[1] <= x and x < hover_edges[2] and hover_edges[3] <= y and y < hover_edges[4] then
+    hover_idx = math_floor((y - 15 * factor) / (19 * factor))
   end
   
   if hover_idx ~= self.list_hover_index then

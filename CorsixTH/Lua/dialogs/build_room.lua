@@ -24,6 +24,7 @@ class "UIBuildRoom" (Window)
 
 local factor = 1.5
 local cat_label_y = {}
+local hover_edges = {}
 
 function UIBuildRoom:UIBuildRoom(ui)
   self:Window()
@@ -31,6 +32,7 @@ function UIBuildRoom:UIBuildRoom(ui)
   local app = ui.app
   factor = app:getGlobalScaleFactor()
   cat_label_y = {21 * factor, 53 * factor, 84 * factor, 116 * factor}
+  hover_edges = {156 * factor, 287 * factor, 31 * factor, 226 * factor}
   self.ui = ui
   self.modal_class = "main"
   self.esc_closes = true
@@ -181,7 +183,7 @@ function UIBuildRoom:onMouseMove(x, y, dx, dy)
   local repaint = Window.onMouseMove(self, x, y, dx, dy)
   
   local hover_idx = 0
-  if 156 <= x and x < 287 and 31 <= y and y < 226 then
+  if hover_edges[1] <= x and x < hover_edges[2] and hover_edges[3] <= y and y < hover_edges[4] then
     for i = 5, 14 do
       local btn = self.buttons[i]
       if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
