@@ -25,6 +25,7 @@ local math_floor
 --! Dialog for purchasing `Object`s (for the corridor or for rooms).
 class "UIFurnishCorridor" (Window)
 
+local factor = 1.5
 function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:Window()
   
@@ -38,8 +39,8 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self.esc_closes = true
   self.ui = ui
   self.anims = app.anims
-  self.width = 360
-  self.height = 274
+  self.width = 360 * factor
+  self.height = 274 * factor
   self:setDefaultPosition(0.5, 0.4)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req10V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
@@ -70,21 +71,21 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
     end)
   end
   
-  self:addPanel(228, 0, 0) -- Grid top
+  self:addPanel(228, 0, 0):setScaledNOffset() -- Grid top
   for y = 33, 103, 10 do
-    self:addPanel(229, 0, y) -- Grid body
+    self:addPanel(229, 0, y):setScaledNOffset() -- Grid body
   end
-  self:addPanel(230, 0, 113) -- Grid bottom
-  self:addPanel(231, 0, 148) -- Cost / total top
-  self:addPanel(232, 0, 173) -- Cost / total body
-  self:addPanel(233, 0, 215) -- Cost / total bottom
-  self:addPanel(234, 0, 248) -- Close button background
-  self:addPanel(234, 0, 252) -- Close button background extension
-  self:addPanel(242, 9, 237):makeButton(0, 0, 129, 28, 243, self.close):setTooltip(_S.tooltip.buy_objects_window.cancel)
+  self:addPanel(230, 0, 113):setScaledNOffset() -- Grid bottom
+  self:addPanel(231, 0, 148):setScaledNOffset() -- Cost / total top
+  self:addPanel(232, 0, 173):setScaledNOffset() -- Cost / total body
+  self:addPanel(233, 0, 215):setScaledNOffset() -- Cost / total bottom
+  self:addPanel(234, 0, 248):setScaledNOffset() -- Close button background
+  self:addPanel(234, 0, 252):setScaledNOffset() -- Close button background extension
+  self:addPanel(242, 9, 237):setScaledNOffset():makeButton(0, 0, 129, 28, 243, self.close):setTooltip(_S.tooltip.buy_objects_window.cancel)
   
-  self:addPanel(235, 146, 0) -- List top
-  self:addPanel(236, 146, 223) -- List bottom
-  self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm):setTooltip(_S.tooltip.buy_objects_window.confirm)
+  self:addPanel(235, 146, 0):setScaledNOffset() -- List top
+  self:addPanel(236, 146, 223):setScaledNOffset() -- List bottom
+  self:addPanel(237, 154, 238):setScaledNOffset():makeButton(0, 0, 197, 28, 238, self.confirm):setTooltip(_S.tooltip.buy_objects_window.confirm)
   local i = 1
   local function item_callback(index, qty)
     return --[[persistable:furnish_corridor_item_callback]] function(self)
@@ -99,11 +100,11 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   end
   for y = 34, 205, 19 do
     local x = 146
-    self:addPanel(239, x, y) -- List body
+    self:addPanel(239, x, y):setScaledNOffset() -- List body
     if i <= #self.objects then
-      self:addPanel(240, x + 12, y):makeButton(0, 0, 125, 19, 241, item_callback(i, 1), nil, item_callback(i, -1)):setTooltip(self.objects[i].object.tooltip)
-      self:addPanel(244, x + 139, y + 1):makeButton(0, 0, 17, 17, 245, item_callback(i, -1)):setTooltip(_S.tooltip.buy_objects_window.decrease)
-      self:addPanel(246, x + 183, y + 1):makeButton(0, 0, 17, 17, 247, item_callback(i, 1)):setTooltip(_S.tooltip.buy_objects_window.increase)
+      self:addPanel(240, x + 12, y):setScaledNOffset():makeButton(0, 0, 125, 19, 241, item_callback(i, 1), nil, item_callback(i, -1)):setTooltip(self.objects[i].object.tooltip)
+      self:addPanel(244, x + 139, y + 1):setScaledNOffset():makeButton(0, 0, 17, 17, 245, item_callback(i, -1)):setTooltip(_S.tooltip.buy_objects_window.decrease)
+      self:addPanel(246, x + 183, y + 1):setScaledNOffset():makeButton(0, 0, 17, 17, 247, item_callback(i, 1)):setTooltip(_S.tooltip.buy_objects_window.increase)
     end
     i = i + 1
   end
@@ -188,20 +189,20 @@ function UIFurnishCorridor:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   
   x, y = x + self.x, y + self.y
-  self.white_font:draw(canvas, self.title_text, x + 163, y + 18)
-  self.white_font:draw(canvas, self.price_text .. self.item_price, x + 24, y + 173)
-  self.white_font:draw(canvas, self.total_text .. self.total_price, x + 24, y + 202)
+  self.white_font:draw(canvas, self.title_text, x + 163 * factor, y + 18 * factor)
+  self.white_font:draw(canvas, self.price_text .. self.item_price, x + 24 * factor, y + 173 * factor)
+  self.white_font:draw(canvas, self.total_text .. self.total_price, x + 24 * factor, y + 202 * factor)
   
   for i, o in ipairs(self.objects) do
     local font = self.white_font
     if i == self.list_hover_index then
       font = self.blue_font
     end
-    font:draw(canvas, o.object.name, x + 163, y + 20 + i * 19)
-    font:draw(canvas, o.qty, x + 306, y + 20 + i * 19, 19, 0)
+    font:draw(canvas, o.object.name, x + 163 * factor, y + (20 + i * 19) * factor)
+    font:draw(canvas, o.qty, x + 306 * factor, y + (20 + i * 19) * factor, 19, 0)
   end
   
-  self.preview_anim:draw(canvas, x + 72, y + 57)
+  self.preview_anim:draw(canvas, x + 72 * factor, y + 57 * factor)
 end
 
 function UIFurnishCorridor:onMouseMove(x, y, dx, dy)

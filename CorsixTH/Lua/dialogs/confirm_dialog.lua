@@ -21,6 +21,7 @@ SOFTWARE. --]]
 --! Dialog for "Are you sure you want to quit?" and similar yes/no questions.
 class "UIConfirmDialog" (Window)
 
+local factor = 1.5
 function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:Window()
   
@@ -29,8 +30,8 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self.esc_closes = true
   self.on_top = true
   self.ui = ui
-  self.width = 183
-  self.height = 199
+  self.width = 183 * factor
+  self.height = 199 * factor
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req04V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
@@ -41,19 +42,19 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   -- Check how "high" the dialog must be
   local w, h = self.white_font:sizeOf(text)
 
-  self:addPanel(357, 0, 0)  -- Dialog header
+  self:addPanel(357, 0, 0):setScaledNOffset()  -- Dialog header
   local last_y = 22
   -- Rough estimate of how many rows it will be when drawn.
   for y = 22, h * (w / 160) * 1.4, 11 do -- Previous value: 136
-    self:addPanel(358, 0, y)  -- Dialog background
+    self:addPanel(358, 0, y):setScaledNOffset()  -- Dialog background
     self.height = self.height + 11
     last_y = last_y + 11
   end
 
-  self:addPanel(359, 0, last_y)  -- Dialog footer
-  self:addPanel(360, 0, last_y + 10):makeButton(8, 10, 82, 34, 361, self.cancel)
+  self:addPanel(359, 0, last_y):setScaledNOffset()  -- Dialog footer
+  self:addPanel(360, 0, last_y + 10):setScaledNOffset():makeButton(8, 10, 82, 34, 361, self.cancel)
     :setTooltip(_S.tooltip.window_general.cancel):setSound"No4.wav"
-  self:addPanel(362, 90, last_y + 10):makeButton(0, 10, 82, 34, 363, self.ok)
+  self:addPanel(362, 90, last_y + 10):setScaledNOffset():makeButton(0, 10, 82, 34, 363, self.ok)
     :setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
   
   self:addKeyHandler("Enter", self.ok)
@@ -77,5 +78,5 @@ function UIConfirmDialog:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   
   x, y = x + self.x, y + self.y
-  self.white_font:drawWrapped(canvas, self.text, x + 17, y + 17, 153)
+  self.white_font:drawWrapped(canvas, self.text, x + 17 * factor, y + 17 * factor, 153)
 end

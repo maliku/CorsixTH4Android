@@ -60,6 +60,7 @@ function UIInformation:UIInformation(ui, text)
 end
 
 function UIInformation:onChangeLanguage()
+    local factor = 1.5
   local rows = 0
   for i, text in ipairs(self.text) do
     local old_rows = rows
@@ -87,7 +88,7 @@ function UIInformation:onChangeLanguage()
   self:addPanel(15, self.width-4, self.height-4)  -- Border bottom right corner
   
   -- Close button
-  self:addPanel(19, self.width - 30, self.height - 30):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
+  -- self:addPanel(19, self.width - 30 * factor, self.height - 30 * factor):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
 end
 
 function UIInformation:draw(canvas, x, y)
@@ -99,7 +100,9 @@ function UIInformation:draw(canvas, x, y)
     last_y = self.black_font:drawWrapped(canvas, text:gsub("//", ""), dx + self.spacing.l, last_y, self.text_width)
     last_y = self.black_font:drawWrapped(canvas, " ",                 dx + self.spacing.l, last_y, self.text_width)
   end
-  
+  -- DK: temp code
+  self.black_font:drawWrapped(canvas, "Back key for close me",                 dx + self.spacing.l, last_y + 12, self.text_width)
+
   Window.draw(self, canvas, x, y)
 end
 

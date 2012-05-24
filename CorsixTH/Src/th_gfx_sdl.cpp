@@ -36,7 +36,7 @@ SOFTWARE.
 #include "agg_renderer_scanline.h"
 #include "agg_span_allocator.h"
 #include <new>
-#include <android/log.h>
+#include "SDL_rotozoom.h"
 
 THRenderTarget::THRenderTarget()
 {
@@ -631,19 +631,13 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
     if(iSprite >= m_iSpriteCount)
         return;
 
-    SDL_Surface *pSprite = _getSpriteBitmap(iSprite, iFlags & 0x1F);
+    SDL_Surface *pSprite = _getSpriteBitmap(iSprite, iFlags & 0x7F);
     if(pSprite == NULL)
         return;
 
     SDL_Rect rctDest;
     rctDest.x = iX;
     rctDest.y = iY;
-
-    if ((iFlags & THDF_Scale) == THDF_Scale) {
-        rctDest.w = pSprite->w << 1;
-        rctDest.h = pSprite->h << 1;
-        __android_log_print(ANDROID_LOG_INFO, "SDL", "Scale Sprite\n");
-    }
     SDL_BlitSurface(pSprite, NULL, pCanvas->getRawSurface(), &rctDest);
 }
 
@@ -691,7 +685,11 @@ SDL_Surface* THSpriteSheet::_getSpriteBitmap(unsigned int iSprite, unsigned long
 
     THDrawFlags eTask;
     SDL_Surface* pBaseBitmap;
-    if(iFlags & THDF_AltPalette)
+    if (iFlags & THDF_Scaled) {
+        pBaseBitmap = _getSpriteBitmap(iSprite, iFlags & 0x1F);
+        eTask = THDF_Scaled;
+    }
+    else if(iFlags & THDF_AltPalette)
     {
         pBaseBitmap = _getSpriteBitmap(iSprite, iFlags & ~THDF_AltPalette);
         eTask = THDF_AltPalette;
@@ -714,8 +712,14 @@ SDL_Surface* THSpriteSheet::_getSpriteBitmap(unsigned int iSprite, unsigned long
     if(pBaseBitmap == NULL)
         return NULL;
 
-    pBitmap = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_SRCCOLORKEY,
-        pBaseBitmap->w, pBaseBitmap->h, 8, 0, 0, 0, 0);
+    if (THDF_Scaled == eTask) {
+        pBitmap = zoomSurface(pBaseBitmap, 1.5f, 1.5f, 0);
+        m_pSprites[iSprite].pBitmap[iFlags] = pBitmap;
+        return pBitmap;
+    } else {
+        pBitmap = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_SRCCOLORKEY,
+                pBaseBitmap->w, pBaseBitmap->h, 8, 0, 0, 0, 0);
+    }
     m_pPalette->_assign(pBitmap);
 
     if(eTask == THDF_AltPalette)

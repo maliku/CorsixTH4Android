@@ -61,6 +61,8 @@ enum THDrawFlags
     THDF_Alpha75        = 1 <<  3,
     //! Draw using a remapped palette
     THDF_AltPalette     = 1 <<  4,
+	//! Scale sprite
+    THDF_Scaled         = 1 <<  6,
 
     /** Object attached to tile flags **/
     /* (should be set prior to attaching to a tile) */
@@ -73,8 +75,6 @@ enum THDrawFlags
     THDF_BoundBoxHitTest= 1 << 12,
     //! Apply a cropping operation prior to drawing
     THDF_Crop           = 1 << 13,
-    //! Scale sprite
-    THDF_Scale          = 1 << 30,
 };
 
 //! Bitflags for animation frames

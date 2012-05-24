@@ -143,10 +143,35 @@ function Panel:Panel()
   self.colour = nil
   self.custom_draw = nil
   self.visible = nil
-  self.scale = nil
+  self.scale_factor = nil
+  self.offset_factor = nil
 end
 
 local panel_mt = permanent("Window.<panel_mt>", getmetatable(Panel()))
+
+function Panel:setScaled()
+  self.scale_factor = 1.5
+  if (self.w) then self.w = math.ceil(self.w * self.scale_factor) end
+  if (self.h) then self.h = math.ceil(self.h * self.scale_factor) end
+  return self;
+end
+
+function Panel:setOffset()
+  self.scale_factor = 1.5
+  self.x = math.ceil(self.x * self.scale_factor)
+  self.y = math.ceil(self.y * self.scale_factor)
+  return self;
+end
+
+function Panel:setScaledNOffset()
+    self:setScaled()
+    self:setOffset()
+  return self;
+end
+
+function Panel:getScaleFactor()
+    return 1.5
+end
 
 function Panel:makeButton(...)
   return self.window:makeButtonOnPanel(self, ...)
@@ -166,11 +191,6 @@ end
 
 function Panel:makeTextbox(...)
   return self.window:makeTextboxOnPanel(self, ...)
-end
-
-function Panel:setScaled()
-    self.scale = true;
-  return self
 end
 
 --[[ Set the colour of a panel
@@ -548,6 +568,13 @@ function Button:preservePanel()
   return self
 end
 
+function Button:preservePanelScaled()
+  local window = self.panel_for_sprite.window
+  self.panel_for_sprite = window:addPanel(0, self.x, self.y):setScaled()
+  self.sprite_index_normal = 0
+  return self
+end
+
 function Button:setSound(name)
   self.sound = name
   return self
@@ -621,6 +648,10 @@ right-clicks the button.
 function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_self, on_rightclick)
   x = x + panel.x
   y = y + panel.y
+  if panel.scale_factor then
+      w = math.ceil(w * panel.scale_factor)
+      h = math.ceil(h * panel.scale_factor)
+  end
   local button = setmetatable({
     ui = self.ui,
     is_toggle = false,
@@ -1109,8 +1140,8 @@ function Window:draw(canvas, x, y)
       if panel.visible then
         if panel.custom_draw then
           panel:custom_draw(canvas, x, y)
-      elseif panel.scale then
-          panel_sprites_draw(panel_sprites, canvas, panel.sprite_index, x + panel.x, y + panel.y, 1073741824)
+      elseif panel.scale_factor then
+          panel_sprites_draw(panel_sprites, canvas, panel.sprite_index, x + panel.x, y + panel.y, 64)
         else
           panel_sprites_draw(panel_sprites, canvas, panel.sprite_index, x + panel.x, y + panel.y)
         end

@@ -190,7 +190,7 @@ end
 
 function UITopPanel:disappear()
   if not self.disappear_counter then
-    self.disappear_counter = 100
+    self.disappear_counter = 50
   end
 end
 

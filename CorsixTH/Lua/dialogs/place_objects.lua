@@ -32,6 +32,7 @@ local ATTACH_BLUEPRINT_TO_TILE = false
 --! The dialog shown when placing objects.
 class "UIPlaceObjects" (Window)
 
+local factor = 1.5
 --[[ Constructor for the class.
 !param ui (UI) The active ui.
 !param object_list (table) a list of tables with objects to place. Keys are "object", "qty" and
@@ -51,8 +52,8 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.map = app.map
   self.anims = app.anims
   self.world = app.world
-  self.width = 186
-  self.height = 167 + #object_list * 29
+  self.width = 186 * factor
+  self.height = (167 + #object_list * 28) * factor
   self:setDefaultPosition(0.9, 0.1)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
@@ -60,24 +61,24 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.title_text = _S.rooms_short.corridor_objects
   self.desc_text = _S.place_objects_window.place_objects_in_corridor
   
-  self:addPanel(112, 0, 0) -- Dialog header
+  self:addPanel(112, 0, 0):setScaledNOffset() -- Dialog header
   for y = 48, 83, 7 do
-    self:addPanel(113, 0, y) -- Desc text box
+    self:addPanel(113, 0, y):setScaledNOffset() -- Desc text box
   end
-  self:addPanel(114,   0, 90) -- Dialog mid-piece
-  self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound"no4.wav":setTooltip(_S.tooltip.place_objects_window.cancel)
+  self:addPanel(114,   0, 90):setScaledNOffset() -- Dialog mid-piece
+  self:addPanel(115,   0, 100):setScaledNOffset():makeButton(9, 8, 41, 42, 116, self.cancel):setSound"no4.wav":setTooltip(_S.tooltip.place_objects_window.cancel)
   self:addKeyHandler("esc", self.cancel)
   self.purchase_button =
-  self:addPanel(117,  50, 100):makeButton(1, 8, 41, 42, 118, self.purchaseItems):setTooltip(_S.tooltip.place_objects_window.buy_sell)
+  self:addPanel(117,  50, 100):setScaledNOffset():makeButton(1, 8, 41, 42, 118, self.purchaseItems):setTooltip(_S.tooltip.place_objects_window.buy_sell)
     :setDisabledSprite(127):enable(false) -- Disabled purchase items button
   self.pickup_button =
-  self:addPanel(119,  92, 100):makeButton(1, 8, 41, 42, 120, self.pickupItems):setTooltip(_S.tooltip.place_objects_window.pick_up)
+  self:addPanel(119,  92, 100):setScaledNOffset():makeButton(1, 8, 41, 42, 120, self.pickupItems):setTooltip(_S.tooltip.place_objects_window.pick_up)
     :setDisabledSprite(128):enable(false):makeToggle() -- Disabled pick up items button
   self.confirm_button = 
-  self:addPanel(121, 134, 100):makeButton(1, 8, 43, 42, 122, self.confirm):setTooltip(_S.tooltip.place_objects_window.confirm)
+  self:addPanel(121, 134, 100):setScaledNOffset():makeButton(1, 8, 43, 42, 122, self.confirm):setTooltip(_S.tooltip.place_objects_window.confirm)
     :setDisabledSprite(129):enable(false):setSound"YesX.wav" -- Disabled confirm button
   
-  self.list_header = self:addPanel(123, 0, 146) -- Object list header
+  self.list_header = self:addPanel(123, 0, 146):setScaledNOffset() -- Object list header
   self.list_header.visible = false
   
   self.objects = {}
@@ -128,14 +129,14 @@ function UIPlaceObjects:resize(num_slots)
     
     -- add new panels (save last one)
     for i = self.num_slots + 1, num_slots - 1 do
-      self:addPanel(124, 0, 121 + i * 29)
+      self:addPanel(124, 0, 121 * factor + i * 28 * factor):setScaled()
         :makeButton(15, 8, 130, 23, 125, idx(i))
-        :preservePanel()
+        :preservePanelScaled()
     end
     -- add last new panel
-    self:addPanel(156, 0, 117 + num_slots * 29)
+    self:addPanel(156, 0, 117 * factor + num_slots * 28 * factor):setScaled()
       :makeButton(15, 12, 130, 23, 125, idx(num_slots))
-      :preservePanel()
+      :preservePanelScaled()
   else
     -- remove buttons
     for i = self.num_slots, num_slots + 1, -1 do
@@ -152,7 +153,7 @@ function UIPlaceObjects:resize(num_slots)
     end
   end
   self.num_slots = num_slots
-  self.height = 167 + (num_slots) * 29
+  self.height = 167 + (num_slots) * 28
 end
 
 function UIPlaceObjects:addObjects(object_list, pay_for)
@@ -545,17 +546,17 @@ function UIPlaceObjects:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   
   x, y = x + self.x, y + self.y
-  self.white_font:draw(canvas, self.title_text, x + 17, y + 21, 153, 0)
-  self.white_font:drawWrapped(canvas, self.desc_text, x + 20, y + 46, 147)
+  self.white_font:draw(canvas, self.title_text, x + 17 * factor, y + 21 * factor, 153, 0)
+  self.white_font:drawWrapped(canvas, self.desc_text, x + 20 * factor, y + 46 * factor, 147)
   
   for i, o in ipairs(self.objects) do
     local font = self.white_font
-    local y = y + 136 + i * 29
+    local y = y + (136 + i * 28) * factor
     if i == self.active_index then
       font = self.blue_font
     end
-    font:draw(canvas, o.object.name, x + 15, y, 130, 0)
-    font:draw(canvas, o.qty, x + 151, y, 19, 0)
+    font:draw(canvas, o.object.name, x + 15 * factor, y, 130, 0)
+    font:draw(canvas, o.qty, x + 151 * factor, y, 19, 0)
   end
 end
 

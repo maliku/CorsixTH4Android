@@ -22,6 +22,7 @@ local TH = require "TH"
 
 class "UIBuildRoom" (Window)
 
+local scale_factor = 1.5
 function UIBuildRoom:UIBuildRoom(ui)
   self:Window()
   
@@ -29,8 +30,8 @@ function UIBuildRoom:UIBuildRoom(ui)
   self.ui = ui
   self.modal_class = "main"
   self.esc_closes = true
-  self.width = 297
-  self.height = 294
+  self.width = 297 * scale_factor
+  self.height = 294 * scale_factor
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req09V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
@@ -54,33 +55,33 @@ function UIBuildRoom:UIBuildRoom(ui)
     end
   end
   
-  self:addPanel(210,   0,   0):setScaled():makeButton(9, 9, 129, 32, 211, cat(1)):setTooltip(_S.tooltip.build_room_window.room_classes.diagnosis)
-  self:addPanel(212,   0,  41):makeButton(9, 0, 129, 31, 213, cat(2)):setTooltip(_S.tooltip.build_room_window.room_classes.treatment)
+  self:addPanel(210,   0,   0):setScaledNOffset():makeButton(9, 9, 129, 32, 211, cat(1)):setTooltip(_S.tooltip.build_room_window.room_classes.diagnosis)
+  self:addPanel(212,   0,  41):setScaledNOffset():makeButton(9, 0, 129, 31, 213, cat(2)):setTooltip(_S.tooltip.build_room_window.room_classes.treatment)
   -- Clinics should really be at y=73, but TH skips a pixel here
   -- so that the left and right columns are the same height
-  self:addPanel(214,   0,  72):makeButton(9, 0, 129, 32, 215, cat(3)):setTooltip(_S.tooltip.build_room_window.room_classes.clinic)
-  self:addPanel(216,   0, 104):makeButton(9, 0, 129, 32, 217, cat(4)):setTooltip(_S.tooltip.build_room_window.room_classes.facilities)
-  self:addPanel(218,   0, 146) -- Grid top
+  self:addPanel(214,   0,  72):setScaledNOffset():makeButton(9, 0, 129, 32, 215, cat(3)):setTooltip(_S.tooltip.build_room_window.room_classes.clinic)
+  self:addPanel(216,   0, 104):setScaledNOffset():makeButton(9, 0, 129, 32, 217, cat(4)):setTooltip(_S.tooltip.build_room_window.room_classes.facilities)
+  self:addPanel(218,   0, 146):setScaledNOffset() -- Grid top
   for y = 179, 249, 10 do
-    self:addPanel(219,   0,   y) -- Grid body
+    self:addPanel(219,   0,   y):setScaledNOffset() -- Grid body
   end
-  self:addPanel(220,   0, 259) -- Grid bottom
-  self:addPanel(221, 146,   0) -- List top
+  self:addPanel(220,   0, 259):setScaledNOffset() -- Grid bottom
+  self:addPanel(221, 146,   0):setScaledNOffset() -- List top
   for y = 34, 205, 19 do
-    self:addPanel(222, 146,   y):makeButton(12, 0, 126, 19, 223, rm()) -- List body
+    self:addPanel(222, 146,   y):setScaledNOffset():makeButton(12, 0, 126, 19, 223, rm()) -- List body
       .enabled = false
   end
   
   -- The close button has no sprite for when pressed, so it has to be custom drawn
   local build_room_dialog_close = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
-  self:addPanel(224, 146, 224):makeButton(8, 34, 134, 27, 224, self.close):setTooltip(_S.tooltip.build_room_window.close)
+  self:addPanel(224, 146, 224):setScaledNOffset():makeButton(8, 34, 134, 27, 224, self.close):setTooltip(_S.tooltip.build_room_window.close)
   .panel_for_sprite.custom_draw = --[[persistable:build_room_draw_close_button]] function(panel, canvas, x, y)
     x = x + panel.x
     y = y + panel.y
-    panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
+    panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, 64)
     local btn = panel.window.active_button
     if btn and btn.panel_for_sprite == panel and btn.active then
-      build_room_dialog_close:draw(canvas, 1, x + 8, y + 34)
+      build_room_dialog_close:draw(canvas, 1, x + 8 * scale_factor, y + 34 * scale_factor, 64)
     end
   end
   
@@ -111,27 +112,27 @@ function UIBuildRoom:UIBuildRoom(ui)
   self:makeTooltip(_S.tooltip.build_room_window.cost, 160, 228, 282, 242)
 end
 
-local cat_label_y = {21, 53, 84, 116}
+local cat_label_y = {21 * scale_factor, 53 * scale_factor, 84 * scale_factor, 116 * scale_factor}
 
 function UIBuildRoom:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   
   x, y = self.x + x, self.y + y
-  self.white_font:draw(canvas, self.list_title, x + 163, y + 18)
+  self.white_font:draw(canvas, self.list_title, x + 163 * scale_factor, y + 18 * scale_factor)
   for i = 1, 4 do
     (i == self.category_index and self.blue_font or self.white_font)
-      :draw(canvas, self.category_titles[i], x + 19, y + cat_label_y[i])
+      :draw(canvas, self.category_titles[i], x + 19 * scale_factor, y + cat_label_y[i])
   end
   
   for i, room in ipairs(self.list) do
     (i == self.list_hover_index and self.blue_font or self.white_font)
-      :draw(canvas, room.name, x + 163, y + 21 + i * 19)
+      :draw(canvas, room.name, x + 163 * scale_factor, y + 21 * scale_factor + i * 19 * scale_factor)
   end
   
-  self.white_font:draw(canvas, self.cost_box, x + 163, y + 232)
+  self.white_font:draw(canvas, self.cost_box, x + 163 * scale_factor, y + 232 * scale_factor)
   
   if self.preview_anim then
-    self.preview_anim:draw(canvas, x + 70, y + 200)
+    self.preview_anim:draw(canvas, x + 70 * scale_factor, y + 200 * scale_factor)
   end
 end
 
